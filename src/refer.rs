@@ -1,5 +1,5 @@
 use reqwest::{Client, Response, Url};
-use serde::{Deserialize, Serialize};
+// use serde::{Deserialize, Serialize};
 
 pub async fn refer(id: &str) -> Result<(), reqwest::Error> {
     let url = format!("https://at.kexie.space/api/record/online/{}", id)

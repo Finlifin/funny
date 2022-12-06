@@ -1,10 +1,46 @@
+use crate::refer::{self, get};
 use reqwest::Url;
-use crate::refer::{get, self};
+use serde::{Deserialize, Serialize};
 
 pub async fn get_top_five() {
     let url = format!("https://at.kexie.space/api/record/topFive")
         .parse::<Url>()
         .unwrap();
-    let res = get(url).await.unwrap().text().await.unwrap();
-    println!("{:#?}",res);
+    let res = get(url)
+        .await
+        .unwrap()
+        .text()
+        .await
+        .expect("请检查你的网络。");
+    let res: Top = serde_json::from_str(&res).unwrap();
+    print_data(&res);
+    // println!("{:#?}", res);
+}
+#[derive(Debug, Deserialize, Serialize)]
+struct Top {
+    data: Vec<Person>,
+    code: i32,
+    msg: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Person {
+    #[serde(alias="userId")]
+    id: u32,
+    #[serde(alias="userName")]
+    name: String,
+    #[serde(alias="userDept")]
+    dept: String,
+    #[serde(alias="userLocation")]
+    location: String,
+    #[serde(alias="totalTime")]
+    total_time: String,
+    week: i32,
+}
+
+fn print_data(data: &Top) {
+    for each in data.data.iter() {
+        println!("|=>{}{}:", each.dept, each.name);
+        println!("     |=>{}", each.total_time)
+    }
 }

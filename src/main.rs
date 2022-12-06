@@ -12,10 +12,6 @@ mod refer;
 
 #[tokio::main]
 async fn main() {
-    // let args = args().collect::<Vec<String>>();
-    // match args.get(1)
-    // let _ = signin(args.get(1).unwrap()).await;
-    // // let res = refer(args.get(1).unwrap()).await.unwrap();
     let default_id = get_id().await;
     let matches = App::new("MayApp")
         .version("0.1")
@@ -67,10 +63,6 @@ async fn main() {
         )
         .get_matches();
 
-    if let Some(f) = matches.value_of("path") {
-        println!("path : {}", f);
-    }
-
     if let Some(matches) = matches.subcommand_matches("in") {
         if let Some(id) = matches.value_of("id") {
             signin(id).await;
@@ -103,7 +95,7 @@ async fn main() {
         }
     }
 
-    if let Some(matches) = matches.subcommand_matches("top") {
+    if let Some(_) = matches.subcommand_matches("top") {
         get_top_five().await;
     }
 }
