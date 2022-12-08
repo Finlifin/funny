@@ -1,6 +1,7 @@
 use reqwest::header::HeaderMap;
 use reqwest::{self, Client, Url};
 use serde::{Deserialize, Serialize};
+use bat::PrettyPrinter;
 // use serde_json::json;
 
 pub async fn signin(id: &str) {
@@ -61,10 +62,11 @@ struct Data {
 
 impl Output {
     fn print(&self) {
-        println!("{}", self.msg);
+        let mut output = format!("{}\n", self.msg);
         if let Some(v) = &self.data.this_time {
-            println!("本次时长：{}", v);
+            output.push_str(format!("本次时长：{}\n", v).as_str());
         }
-        println!("总时长：{}", self.data.total_time);
+        output.push_str(format!("总时长：{}\n", self.data.total_time).as_str());
+        PrettyPrinter::new().input_from_bytes(output.as_bytes()).language("json").print().unwrap();
     }
 }

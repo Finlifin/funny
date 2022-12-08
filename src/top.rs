@@ -1,4 +1,5 @@
-use crate::refer::{self, get};
+use crate::refer::get;
+use bat::PrettyPrinter;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
 
@@ -25,22 +26,26 @@ struct Top {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Person {
-    #[serde(alias="userId")]
+    #[serde(alias = "userId")]
     id: u32,
-    #[serde(alias="userName")]
+    #[serde(alias = "userName")]
     name: String,
-    #[serde(alias="userDept")]
+    #[serde(alias = "userDept")]
     dept: String,
-    #[serde(alias="userLocation")]
+    #[serde(alias = "userLocation")]
     location: String,
-    #[serde(alias="totalTime")]
+    #[serde(alias = "totalTime")]
     total_time: String,
     week: i32,
 }
 
 fn print_data(data: &Top) {
     for each in data.data.iter() {
-        println!("|=>{}{}:", each.dept, each.name);
-        println!("     |=>{}", each.total_time)
+        let line = format!("|=>{}{}:{}\n", each.dept, each.name, each.total_time);
+        let _ = PrettyPrinter::new()
+            .input_from_bytes(line.as_bytes())
+            .language("python")
+            .print()
+            .unwrap();
     }
 }
